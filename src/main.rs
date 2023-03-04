@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use resources::GameTextures;
+use stars::StarsCount;
 
 mod player;
 mod resources;
@@ -32,4 +33,5 @@ fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {
     };
 
     commands.insert_resource(game_texture);
+    commands.insert_resource(StarsCount(0));
 }
