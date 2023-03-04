@@ -3,6 +3,7 @@ use resources::GameTextures;
 
 mod player;
 mod resources;
+mod stars;
 
 const SHIP_SPRITE: &str = "ship.png";
 
@@ -18,6 +19,7 @@ fn main() {
             ..Default::default()
         }))
         .add_plugin(player::PlayerPlugin)
+        .add_plugin(stars::StarsPlugin)
         .add_startup_system(setup_system)
         .run();
 }
