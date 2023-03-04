@@ -1,5 +1,5 @@
 use bevy::{
-    prelude::{App, Commands, Plugin, Res},
+    prelude::{App, Commands, Plugin, Res, Transform, Vec3},
     sprite::SpriteBundle,
 };
 
@@ -15,6 +15,10 @@ impl Plugin for PlayerPlugin {
 fn spawn_system(mut commands: Commands, game_textures: Res<GameTextures>) {
     commands.spawn(SpriteBundle {
         texture: game_textures.ship.clone(),
+        transform: Transform {
+            translation: Vec3::new(0., 0., 10.),
+            ..Default::default()
+        },
         ..Default::default()
     });
 }
