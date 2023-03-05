@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use resources::GameTextures;
+use resources::{GameTextures, WinSize};
 use stars::StarsCount;
 
 mod player;
@@ -25,13 +25,26 @@ fn main() {
         .run();
 }
 
-fn setup_system(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup_system(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut windows: ResMut<Windows>,
+) {
+    // camera
     commands.spawn(Camera2dBundle::default());
 
-    let game_texture = GameTextures {
+    // insert textures
+    commands.insert_resource(GameTextures {
         ship: asset_server.load(SHIP_SPRITE),
-    };
+    });
 
-    commands.insert_resource(game_texture);
+    // capture window sizes
+    let window = windows.get_primary_mut().unwrap();
+    commands.insert_resource(WinSize {
+        w: window.width(),
+        h: window.height(),
+    });
+
+    // set number of stars
     commands.insert_resource(StarsCount(0));
 }
