@@ -17,6 +17,7 @@ fn spawn_system(mut commands: Commands, game_textures: Res<GameTextures>) {
         texture: game_textures.ship.clone(),
         transform: Transform {
             translation: Vec3::new(0., 0., 10.),
+            scale: Vec3::new(0.3, 0.3, 0.),
             ..Default::default()
         },
         ..Default::default()
