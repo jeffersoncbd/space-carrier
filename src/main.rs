@@ -1,7 +1,9 @@
 use bevy::prelude::*;
+use player::ShipCount;
 use resources::{GameTextures, WinSize};
 use stars::StarsCount;
 
+mod components;
 mod player;
 mod resources;
 mod stars;
@@ -14,7 +16,9 @@ fn main() {
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             window: WindowDescriptor {
                 title: "Space Carrier".to_string(),
-                mode: WindowMode::Fullscreen,
+                mode: WindowMode::Windowed,
+                height: 600.,
+                width: 800.,
                 ..Default::default()
             },
             ..Default::default()
@@ -47,4 +51,7 @@ fn setup_system(
 
     // set number of stars
     commands.insert_resource(StarsCount(0));
+
+    // set number of ships
+    commands.insert_resource(ShipCount(0))
 }
