@@ -45,16 +45,16 @@ fn keyboard_event_system(
     match query.get_single_mut() {
         Ok(mut velocity) => {
             velocity.y = if keyboard.pressed(KeyCode::Space) {
-                if velocity.y < 5. {
-                    velocity.y + 0.1
+                if velocity.y < 2. {
+                    velocity.y + 0.05
                 } else {
-                    5.
+                    2.
                 }
             } else {
-                if velocity.y < -0.2 {
-                    velocity.y + 0.02
-                } else if velocity.y > 0.2 {
-                    velocity.y - 0.02
+                if velocity.y < -0.1 {
+                    velocity.y + 0.01
+                } else if velocity.y > 0.1 {
+                    velocity.y - 0.01
                 } else {
                     0.
                 }

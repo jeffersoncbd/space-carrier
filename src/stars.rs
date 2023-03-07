@@ -7,7 +7,9 @@ use crate::{components::common::Velocity, player::Player, resources::WinSize};
 pub struct StarsCount(pub u32);
 
 #[derive(Component)]
-pub struct Star;
+pub struct Star {
+    pub radius: f32,
+}
 
 pub const MAX_STARS: u32 = 50;
 
@@ -50,20 +52,24 @@ fn spawn_system(
                 },
                 ..Default::default()
             })
-            .insert(Star);
+            .insert(Star {
+                radius: star_radius,
+            });
 
         stars_count.0 += 1;
     }
 }
 
 fn stars_move_system(
+    mut commands: Commands,
+    win_size: Res<WinSize>,
     player_query: Query<&Velocity, With<Player>>,
-    mut stars_query: Query<(Entity, &mut Transform), With<Star>>,
+    mut stars_query: Query<(Entity, &mut Transform, &Star), With<Star>>,
 ) {
     for velocity in player_query.iter() {
-        for (_, mut transform) in stars_query.iter_mut() {
+        for (entity, mut transform, star) in stars_query.iter_mut() {
             let translation = &mut transform.translation;
-            translation.y -= velocity.y;
+            translation.y -= velocity.y * star.radius;
         }
     }
 }
