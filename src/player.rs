@@ -8,6 +8,8 @@ pub struct ShipCount(pub u8);
 #[derive(Component)]
 pub struct Player;
 
+const MAX_VELOCITY: f32 = 100.;
+
 pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
@@ -45,16 +47,16 @@ fn keyboard_event_system(
     match query.get_single_mut() {
         Ok(mut velocity) => {
             velocity.y = if keyboard.pressed(KeyCode::Space) {
-                if velocity.y < 2. {
-                    velocity.y + 0.05
+                if velocity.y < MAX_VELOCITY {
+                    velocity.y + (MAX_VELOCITY / 500.)
                 } else {
-                    2.
+                    MAX_VELOCITY
                 }
             } else {
                 if velocity.y < -0.1 {
-                    velocity.y + 0.01
+                    velocity.y + (MAX_VELOCITY / 1000.)
                 } else if velocity.y > 0.1 {
-                    velocity.y - 0.01
+                    velocity.y - (MAX_VELOCITY / 1000.)
                 } else {
                     0.
                 }

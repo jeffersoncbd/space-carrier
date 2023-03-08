@@ -11,7 +11,8 @@ pub struct Star {
     pub radius: f32,
 }
 
-pub const MAX_STARS: u32 = 50;
+pub const MAX_STARS: u32 = 100;
+const MARGIN_TO_DESPAWN: f32 = 10.;
 
 pub struct StarsPlugin;
 impl Plugin for StarsPlugin {
@@ -38,7 +39,21 @@ fn spawn_system(
             rng.gen_range(-y_ref..y_ref) as f32,
         );
 
-        let star_radius = rng.gen_range(1..5) as f32;
+        let star_radius = if stars_count.0 <= (MAX_STARS as f32 * 0.5) as u32 {
+            0.3
+        } else if stars_count.0 <= (MAX_STARS as f32 * 0.7) as u32 {
+            0.6
+        } else if stars_count.0 <= (MAX_STARS as f32 * 0.8) as u32 {
+            0.8
+        } else if stars_count.0 <= (MAX_STARS as f32 * 0.9) as u32 {
+            1.
+        } else if stars_count.0 <= (MAX_STARS as f32 * 0.95) as u32 {
+            1.2
+        } else if stars_count.0 <= (MAX_STARS as f32 * 0.99) as u32 {
+            1.4
+        } else {
+            2.
+        };
 
         commands
             .spawn(MaterialMesh2dBundle {
@@ -61,15 +76,26 @@ fn spawn_system(
 }
 
 fn stars_move_system(
-    mut commands: Commands,
     win_size: Res<WinSize>,
     player_query: Query<&Velocity, With<Player>>,
-    mut stars_query: Query<(Entity, &mut Transform, &Star), With<Star>>,
+    mut stars_query: Query<(&mut Transform, &Star), With<Star>>,
 ) {
-    for velocity in player_query.iter() {
-        for (entity, mut transform, star) in stars_query.iter_mut() {
+    if let Ok(velocity) = player_query.get_single() {
+        for (mut transform, star) in stars_query.iter_mut() {
             let translation = &mut transform.translation;
-            translation.y -= velocity.y * star.radius;
+            translation.y -= (velocity.y / 20.) * star.radius;
+
+            // recompute x/y
+            if translation.y < -win_size.h / 2. + MARGIN_TO_DESPAWN {
+                let mut rng = thread_rng();
+                let x_ref = win_size.w / 2.;
+                let (x, y) = (
+                    rng.gen_range(-x_ref..x_ref) as f32,
+                    win_size.h / 2. + MARGIN_TO_DESPAWN,
+                );
+                translation.y = y;
+                translation.x = x;
+            }
         }
     }
 }
