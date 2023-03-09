@@ -1,7 +1,11 @@
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
 use rand::{thread_rng, Rng};
 
-use crate::{components::common::Velocity, player::Player, resources::WinSize};
+use crate::{
+    components::common::Velocity,
+    player::{Player, MAX_VELOCITY},
+    resources::WinSize,
+};
 
 #[derive(Resource)]
 pub struct StarsCount(pub u32);
@@ -11,7 +15,7 @@ pub struct Star {
     pub radius: f32,
 }
 
-pub const MAX_STARS: u32 = 100;
+pub const MAX_STARS: u32 = 500;
 const MARGIN_TO_DESPAWN: f32 = 10.;
 
 pub struct StarsPlugin;
@@ -40,19 +44,19 @@ fn spawn_system(
         );
 
         let star_radius = if stars_count.0 <= (MAX_STARS as f32 * 0.5) as u32 {
-            0.3
+            0.5
         } else if stars_count.0 <= (MAX_STARS as f32 * 0.7) as u32 {
-            0.6
+            0.55
         } else if stars_count.0 <= (MAX_STARS as f32 * 0.8) as u32 {
-            0.8
+            0.6
         } else if stars_count.0 <= (MAX_STARS as f32 * 0.9) as u32 {
-            1.
+            0.65
         } else if stars_count.0 <= (MAX_STARS as f32 * 0.95) as u32 {
-            1.2
+            0.7
         } else if stars_count.0 <= (MAX_STARS as f32 * 0.99) as u32 {
-            1.4
+            0.8
         } else {
-            2.
+            1.
         };
 
         commands
@@ -83,7 +87,7 @@ fn stars_move_system(
     if let Ok(velocity) = player_query.get_single() {
         for (mut transform, star) in stars_query.iter_mut() {
             let translation = &mut transform.translation;
-            translation.y -= (velocity.y / 20.) * star.radius;
+            translation.y -= (velocity.y / MAX_VELOCITY / 20.) * (star.radius * 10.);
 
             // recompute x/y
             if translation.y < -win_size.h / 2. + MARGIN_TO_DESPAWN {
