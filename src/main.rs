@@ -2,11 +2,13 @@ use bevy::prelude::*;
 use player::ShipCount;
 use resources::{GameTextures, WinSize};
 use stars::StarsCount;
+use ui::velocimeter::VelocimeterBlocks;
 
 mod components;
 mod player;
 mod resources;
 mod stars;
+mod ui;
 
 const SHIP_SPRITE: &str = "ship.png";
 
@@ -16,7 +18,7 @@ fn main() {
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             window: WindowDescriptor {
                 title: "Space Carrier".to_string(),
-                mode: WindowMode::Windowed,
+                mode: WindowMode::BorderlessFullscreen,
                 height: 600.,
                 width: 800.,
                 ..Default::default()
@@ -25,6 +27,7 @@ fn main() {
         }))
         .add_plugin(player::PlayerPlugin)
         .add_plugin(stars::StarsPlugin)
+        .add_plugin(ui::velocimeter::VelocimeterPlugin)
         .add_startup_system(setup_system)
         .run();
 }
@@ -53,5 +56,8 @@ fn setup_system(
     commands.insert_resource(StarsCount(0));
 
     // set number of ships
-    commands.insert_resource(ShipCount(0))
+    commands.insert_resource(ShipCount(0));
+
+    // set velocimeter blocks
+    commands.insert_resource(VelocimeterBlocks(1));
 }

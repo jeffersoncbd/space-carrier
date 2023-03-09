@@ -8,7 +8,7 @@ pub struct ShipCount(pub u8);
 #[derive(Component)]
 pub struct Player;
 
-const MAX_VELOCITY: f32 = 100.;
+pub const MAX_VELOCITY: f32 = 100.;
 
 pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
