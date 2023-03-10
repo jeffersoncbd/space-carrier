@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use player::ShipCount;
+use player::{FlameCount, ShipCount};
 use resources::{GameTextures, WinSize};
 use stars::StarsCount;
 use ui::velocimeter::VelocimeterBlocks;
@@ -11,9 +11,11 @@ mod stars;
 mod ui;
 
 const SHIP_SPRITE: &str = "ship.png";
+const FLAME_SHEET: &str = "p_flame_sheet.png";
 
 fn main() {
     App::new()
+        .add_startup_system(setup_system)
         .insert_resource(ClearColor(Color::rgb(0., 0., 0.)))
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             window: WindowDescriptor {
@@ -28,21 +30,27 @@ fn main() {
         .add_plugin(player::PlayerPlugin)
         .add_plugin(stars::StarsPlugin)
         .add_plugin(ui::velocimeter::VelocimeterPlugin)
-        .add_startup_system(setup_system)
         .run();
 }
 
 fn setup_system(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
+    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
     mut windows: ResMut<Windows>,
 ) {
     // camera
     commands.spawn(Camera2dBundle::default());
 
+    // create flame texture atlas
+    let texture_handle = asset_server.load(FLAME_SHEET);
+    let texture_atlas =
+        TextureAtlas::from_grid(texture_handle, Vec2::new(8., 16.), 2, 1, None, None);
+
     // insert textures
     commands.insert_resource(GameTextures {
         ship: asset_server.load(SHIP_SPRITE),
+        flame: texture_atlases.add(texture_atlas),
     });
 
     // capture window sizes
@@ -57,6 +65,7 @@ fn setup_system(
 
     // set number of ships
     commands.insert_resource(ShipCount(0));
+    commands.insert_resource(FlameCount(0));
 
     // set velocimeter blocks
     commands.insert_resource(VelocimeterBlocks(1));
