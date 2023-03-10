@@ -2,7 +2,6 @@ use bevy::prelude::*;
 use player::{FlameCount, ShipCount};
 use resources::{GameTextures, WinSize};
 use stars::StarsCount;
-use ui::velocimeter::VelocimeterBlocks;
 
 mod components;
 mod player;
@@ -27,9 +26,9 @@ fn main() {
             },
             ..Default::default()
         }))
+        .add_plugins(ui::UiPlugins)
         .add_plugin(player::PlayerPlugin)
         .add_plugin(stars::StarsPlugin)
-        .add_plugin(ui::velocimeter::VelocimeterPlugin)
         .run();
 }
 
@@ -66,7 +65,4 @@ fn setup_system(
     // set number of ships
     commands.insert_resource(ShipCount(0));
     commands.insert_resource(FlameCount(0));
-
-    // set velocimeter blocks
-    commands.insert_resource(VelocimeterBlocks(1));
 }
