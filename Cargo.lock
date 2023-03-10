@@ -2635,7 +2635,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "space-navegation"
+name = "space-carrier"
 version = "0.1.0"
 dependencies = [
  "bevy",
