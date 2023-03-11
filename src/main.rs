@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use player::{FlameCount, ShipCount};
-use resources::{GameTextures, WinSize};
+use resources::{GameIcons, GameTextures, WinSize};
 use stars::StarsCount;
 
 mod components;
@@ -11,6 +11,9 @@ mod ui;
 
 const SHIP_SPRITE: &str = "ship.png";
 const FLAME_SHEET: &str = "p_flame_sheet.png";
+
+const ICON_ATOM: &str = "icon_atom.png";
+const ICON_FIRE: &str = "icon_fire.png";
 
 fn main() {
     App::new()
@@ -45,6 +48,12 @@ fn setup_system(
     let texture_handle = asset_server.load(FLAME_SHEET);
     let texture_atlas =
         TextureAtlas::from_grid(texture_handle, Vec2::new(8., 16.), 2, 1, None, None);
+
+    // insert icons
+    commands.insert_resource(GameIcons {
+        atom: asset_server.load(ICON_ATOM),
+        fire: asset_server.load(ICON_FIRE),
+    });
 
     // insert textures
     commands.insert_resource(GameTextures {

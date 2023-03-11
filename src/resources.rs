@@ -4,6 +4,12 @@ use bevy::{
 };
 
 #[derive(Resource)]
+pub struct GameIcons {
+    pub atom: Handle<Image>,
+    pub fire: Handle<Image>,
+}
+
+#[derive(Resource)]
 pub struct GameTextures {
     pub ship: Handle<Image>,
     pub flame: Handle<TextureAtlas>,
