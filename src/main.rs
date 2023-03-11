@@ -29,7 +29,7 @@ fn main() {
             },
             ..Default::default()
         }))
-        .add_plugins(ui::UiPlugins)
+        .add_plugins(ui::Plugins)
         .add_plugin(player::PlayerPlugin)
         .add_plugin(stars::StarsPlugin)
         .run();

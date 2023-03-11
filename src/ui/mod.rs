@@ -1,15 +1,16 @@
 use bevy::prelude::{Commands, Plugin, PluginGroup};
 
-// mod propulsion;
+mod propulsion_controls;
 mod velocimeter;
 
-pub struct UiPlugins;
-impl PluginGroup for UiPlugins {
+pub struct Plugins;
+impl PluginGroup for Plugins {
     fn build(self) -> bevy::app::PluginGroupBuilder {
         let group = bevy::app::PluginGroupBuilder::start::<Self>();
 
         group
-            .add(velocimeter::VelocimeterPlugin)
+            .add(propulsion_controls::Plugin)
+            // .add(velocimeter::VelocimeterPlugin)
             .add(ConfigurationPlugin)
     }
 }
