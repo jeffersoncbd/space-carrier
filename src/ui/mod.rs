@@ -1,7 +1,9 @@
-use bevy::prelude::{Commands, Plugin, PluginGroup};
+use bevy::{prelude::*, window::PrimaryWindow};
+
+use crate::{WinSize, ICON_ATOM, ICON_FIRE};
 
 mod propulsion_controls;
-mod velocimeter;
+mod resources;
 
 pub struct Plugins;
 impl PluginGroup for Plugins {
@@ -10,7 +12,6 @@ impl PluginGroup for Plugins {
 
         group
             .add(propulsion_controls::Plugin)
-            // .add(velocimeter::VelocimeterPlugin)
             .add(ConfigurationPlugin)
     }
 }
@@ -18,11 +19,28 @@ impl PluginGroup for Plugins {
 struct ConfigurationPlugin;
 impl Plugin for ConfigurationPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
-        app.add_startup_system(configuration_system);
+        app.add_startup_system(setup.in_base_set(CoreSet::First))
+            .add_startup_system(propulsion_controls::spawn_buttons.after(setup));
     }
 }
 
-fn configuration_system(mut commands: Commands) {
-    // set velocimeter blocks
-    commands.insert_resource(velocimeter::VelocimeterBlocks(1));
+fn setup(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    windows_query: Query<&Window, With<PrimaryWindow>>,
+) {
+    // insert icons
+    commands.insert_resource(resources::Icons {
+        atom: asset_server.load(ICON_ATOM),
+        fire: asset_server.load(ICON_FIRE),
+    });
+
+    // capture window sizes
+    let Ok(window) = windows_query.get_single() else {
+            return;
+        };
+    commands.insert_resource(WinSize {
+        w: window.width(),
+        h: window.height(),
+    });
 }
