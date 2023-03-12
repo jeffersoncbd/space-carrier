@@ -1,4 +1,7 @@
-use bevy::prelude::*;
+use bevy::{
+    prelude::*,
+    window::{PrimaryWindow, WindowMode},
+};
 use player::{FlameCount, ShipCount};
 use resources::{GameIcons, GameTextures, WinSize};
 use stars::StarsCount;
@@ -17,29 +20,27 @@ const ICON_FIRE: &str = "icon_fire.png";
 
 fn main() {
     App::new()
-        .add_startup_system(setup_system)
         .insert_resource(ClearColor(Color::rgb(0., 0., 0.)))
         .add_plugins(DefaultPlugins.set(WindowPlugin {
-            window: WindowDescriptor {
+            primary_window: Some(Window {
                 title: "Space Carrier".to_string(),
                 mode: WindowMode::BorderlessFullscreen,
-                height: 600.,
-                width: 800.,
                 ..Default::default()
-            },
+            }),
             ..Default::default()
         }))
+        .add_startup_system(setup)
         .add_plugins(ui::Plugins)
         .add_plugin(player::PlayerPlugin)
         .add_plugin(stars::StarsPlugin)
         .run();
 }
 
-fn setup_system(
+fn setup(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
-    mut windows: ResMut<Windows>,
+    windows_query: Query<&Window, With<PrimaryWindow>>,
 ) {
     // camera
     commands.spawn(Camera2dBundle::default());
@@ -62,7 +63,9 @@ fn setup_system(
     });
 
     // capture window sizes
-    let window = windows.get_primary_mut().unwrap();
+    let Ok(window) = windows_query.get_single() else {
+        return;
+    };
     commands.insert_resource(WinSize {
         w: window.width(),
         h: window.height(),
