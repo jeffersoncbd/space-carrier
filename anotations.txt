@@ -1,0 +1,29 @@
+use std::f64::consts::PI;
+
+fn calculate_velocity_x(angle: f64, velocity: f64) -> f64 {
+    let angle_rad = angle * PI / 180.0;
+    velocity * angle_rad.cos()
+}
+
+fn calculate_velocity_y(angle: f64, velocity: f64) -> f64 {
+    let angle_rad = angle * PI / 180.0;
+    velocity * angle_rad.sin()
+}
+
+
+Se o objeto se moveu mais π/4 radianos, isso significa que o seu novo ângulo em relação ao eixo x é de π/4 + π/4 = π/2 radianos. Podemos usar novamente as equações trigonométricas para encontrar as novas coordenadas x e y.
+
+cos(π/2) = x'/10
+
+sin(π/2) = y'/10
+
+Resolvendo para x' e y', temos:
+
+x' = 10 cos(π/2) = 0 unidades
+
+y' = 10 sin(π/2) = 10 unidades
+
+Portanto, a nova posição do objeto em relação aos eixos x e y é (0, 10). Isso significa que o objeto se moveu 7,07 unidades na direção do eixo y.
+
+
+
